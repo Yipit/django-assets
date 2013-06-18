@@ -265,7 +265,6 @@ class TestStaticFiles(TempEnvironmentHelper):
         settings.STATICFILES_DIRS = tuple(self.create_directories('foo', 'bar'))
         settings.STATICFILES_FINDERS += ('django_assets.finders.AssetsFinder',)
         self.create_files({'foo/file1': 'foo', 'bar/file2': 'bar'})
-        settings.DEBUG = True
 
         # Reset the finders cache after each run, since our
         # STATICFILES_DIRS change every time.
@@ -276,21 +275,6 @@ class TestStaticFiles(TempEnvironmentHelper):
         """Finders are used to find source files.
         """
         self.mkbundle('file1', 'file2', output="out").build()
-        assert self.get("media/out") == "foo\nbar"
-
-    def test_build_nodebug(self):
-        """If debug is disabled, the finders are not used.
-        """
-        settings.DEBUG = False
-        bundle = self.mkbundle('file1', 'file2', output="out")
-        assert_raises(BundleError, bundle.build)
-
-        # After creating the files in the static root directory,
-        # it works (we only look there in production).
-        from django.core.management import call_command
-        call_command("collectstatic", interactive=False)
-
-        bundle.build()
         assert self.get("media/out") == "foo\nbar"
 
     def test_find_with_glob(self):
