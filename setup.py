@@ -26,7 +26,7 @@ webassets_version = parse_version('__webassets_version__')
 
 
 setup(
-    name='django-assets',
+    name='django-assets-yipit',
     version=version,
     url='http://github.com/miracle2k/django-assets',
     license='BSD',
